@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Oscuro - Descubre tus tendencias ocultas</title>
+  <style>
+    :root {
+      --dark-bg: #0a0a0a;
+      --darker-bg: #050505;
+      --card-bg: #1a1a1a;
+      --accent: #e63946;
+      --accent-dark: #c1121f;
+      --text: #f8f9fa;
+      --text-secondary: #adb5bd;
+      --border: #333;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--dark-bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-image: radial-gradient(circle at 25% 25%, rgba(230, 57, 70, 0.1) 0%, transparent 50%);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      width: 100%;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+
+    h1 {
+      color: var(--accent);
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      font-weight: 800;
+      letter-spacing: -0.05em;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .disclaimer {
+      background-color: rgba(230, 57, 70, 0.2);
+      border-left: 4px solid var(--accent);
+      padding: 1rem;
+      margin: 1.5rem 0;
+      border-radius: 0 4px 4px 0;
+      font-size: 0.9rem;
+    }
+
+    .question-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .question-card {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .question-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .question-text {
+      font-weight: 600;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      color: var(--text);
+    }
+
+    .options-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .option:last-child {
+      border-bottom: none;
+    }
+
+    .option input {
+      margin-right: 0.8rem;
+      accent-color: var(--accent);
+      width: 18px;
+      height: 18px;
+    }
+
+    .option label {
+      cursor: pointer;
+      flex: 1;
+      user-select: none;
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      margin: 2rem 0;
+    }
+
+    .btn {
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      padding: 1rem 2.5rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .btn:hover {
+      background-color: var(--accent-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .result-container {
+      background-color: var(--darker-bg);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-top: 2rem;
+      text-align: center;
+      border: 1px solid var(--border);
+      display: none;
+    }
+
+    .result-title {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+
+    .result-text {
+      font-size: 1.2rem;
+      line-height: 1.8;
+    }
+
+    .progress-container {
+      width: 100%;
+      background-color: var(--border);
+      border-radius: 10px;
+      height: 20px;
+      margin: 1.5rem 0;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-dark), var(--accent));
+      border-radius: 10px;
+      transition: width 0.5s ease-in-out;
+    }
+
+    .score-display {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin: 1rem 0;
+      color: var(--accent);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: auto;
+      padding: 1.5rem;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem 1rem;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .question-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>TEST DE TENDENCIAS OSCURAS</h1>
+      <p class="subtitle">Descubre los rasgos ocultos de tu personalidad que podrían revelar tendencias peligrosas</p>
+    </header>
+
+    <div class="disclaimer">
+      <strong>Nota:</strong> Este test es solo con fines de entretenimiento y no constituye un diagnóstico psicológico. Los resultados deben tomarse con cautela.
+    </div>
+
+    <form id="quizForm">
+      <div class="question-container" id="questionsContainer"></div>
+    </form>
+
+    <div class="btn-container">
+      <button class="btn" onclick="verResultado()">Calcular Resultado</button>
+    </div>
+
+    <div class="result-container" id="resultContainer">
+      <h2 class="result-title">TU RESULTADO</h2>
+      <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="score-display" id="scoreDisplay"></div>
+      <div class="result-text" id="resultText"></div>
+    </div>
+  </div>
+
+  <footer>
+    © 2023 Test de Personalidad Oscura | Solo con fines educativos
+  </footer>
+
+  <script>
+    const preguntas = [
+      {texto: "¿Te cuesta sentir culpa después de mentir o engañar a alguien?", opciones: [
+        { texto: "Nunca, siempre me siento mal", valor: 0 }, 
+        { texto: "A veces, depende de la situación", valor: 1 }, 
+        { texto: "Rara vez me siento culpable", valor: 2 }, 
+        { texto: "Nunca me siento culpable", valor: 3 }
+      ]},
+      {texto: "¿Te has sentido atraído por la idea de controlar o manipular a otras personas?", opciones: [
+        { texto: "No, jamás se me ocurriría", valor: 0 }, 
+        { texto: "En situaciones específicas he considerado la idea", valor: 1 }, 
+        { texto: "Sí, me parece una forma útil de conseguir lo que quiero", valor: 2 }, 
+        { texto: "Sí, me emociona y disfruto la sensación de control", valor: 3 }
+      ]},
+      {texto: "Cuando alguien te ha hecho daño, ¿has deseado que sufra consecuencias graves?", opciones: [
+        { texto: "No, creo en el perdón", valor: 0 }, 
+        { texto: "He tenido pensamientos pasajeros de venganza", valor: 1 }, 
+        { texto: "Sí, lo he imaginado con detalle", valor: 2 }, 
+        { texto: "Sí, y he disfrutado imaginando su sufrimiento", valor: 3 }
+      ]},
+      {texto: "¿Cómo reaccionas cuando las cosas no salen como las habías planeado?", opciones: [
+        { texto: "Me adapto fácilmente", valor: 0 }, 
+        { texto: "Me molesta un poco", valor: 1 }, 
+        { texto: "Me enfado bastante", valor: 2 }, 
+        { texto: "Puedo llegar a sentir ira incontrolable", valor: 3 }
+      ]},
+      {texto: "¿Has hecho algo cruel o dañino solo por curiosidad o diversión?", opciones: [
+        { texto: "Nunca", valor: 0 }, 
+        { texto: "Cosas menores sin consecuencias graves", valor: 1 }, 
+        { texto: "Sí, en varias ocasiones", valor: 2 }, 
+        { texto: "Sí, y no me arrepiento de ello", valor: 3 }
+      ]},
+      {texto: "¿Con qué frecuencia sientes empatía por los problemas de los demás?", opciones: [
+        { texto: "Siempre, soy muy empático", valor: 0 }, 
+        { texto: "Depende de la persona y situación", valor: 1 }, 
+        { texto: "Rara vez me afectan los problemas ajenos", valor: 2 }, 
+        { texto: "Casi nunca, me cuesta entender los sentimientos ajenos", valor: 3 }
+      ]},
+      {texto: "¿Utilizas la manipulación para obtener lo que deseas?", opciones: [
+        { texto: "No, creo en la honestidad", valor: 0 }, 
+        { texto: "Solo en situaciones muy específicas", valor: 1 }, 
+        { texto: "Sí, cuando me conviene", valor: 2 }, 
+        { texto: "Sí, es mi método principal y soy muy bueno en eso", valor: 3 }
+      ]},
+      {texto: "¿Has fantaseado con hacer daño a alguien que te ha perjudicado?", opciones: [
+        { texto: "Jamás se me ha ocurrido", valor: 0 }, 
+        { texto: "Solo brevemente y en broma", valor: 1 }, 
+        { texto: "Sí, en varias ocasiones", valor: 2 }, 
+        { texto: "Sí, con mucho detalle y planificación", valor: 3 }
+      ]},
+      {texto: "¿Te resulta difícil ponerte en el lugar de los demás?", opciones: [
+        { texto: "No, lo hago con facilidad", valor: 0 }, 
+        { texto: "A veces, depende de la situación", valor: 1 }, 
+        { texto: "Sí, me cuesta bastante", valor: 2 }, 
+        { texto: "Sí, casi nunca entiendo por qué la gente reacciona emocionalmente", valor: 3 }
+      ]},
+      {texto: "¿Mientes con frecuencia en situaciones importantes?", opciones: [
+        { texto: "No, valoro la honestidad", valor: 0 }, 
+        { texto: "Muy ocasionalmente", valor: 1 }, 
+        { texto: "Sí, cuando me beneficia", valor: 2 }, 
+        { texto: "Sí, miento habitualmente sin remordimientos", valor: 3 }
+      ]},
+      {texto: "¿Te sientes superior a la mayoría de las personas?", opciones: [
+        { texto: "No, todos tenemos igual valor", valor: 0 }, 
+        { texto: "En algunos aspectos específicos", valor: 1 }, 
+        { texto: "Sí, en muchos aspectos", valor: 2 }, 
+        { texto: "Sí, me considero claramente superior", valor: 3 }
+      ]},
+      {texto: "¿Te aburres fácilmente de las personas?", opciones: [
+        { texto: "No, disfruto de las relaciones duraderas", valor: 0 }, 
+        { texto: "A veces, cuando no me aportan nada", valor: 1 }, 
+        { texto: "Sí, con frecuencia", valor: 2 }, 
+        { texto: "Sí, casi siempre pierdo el interés rápidamente", valor: 3 }
+      ]},
+      {texto: "¿Cómo te sientes cuando ves el sufrimiento ajeno?", opciones: [
+        { texto: "Me afecta profundamente", valor: 0 }, 
+        { texto: "Depende de quién sea", valor: 1 }, 
+        { texto: "Me es indiferente", valor: 2 }, 
+        { texto: "A veces me produce curiosidad o incluso satisfacción", valor: 3 }
+      ]},
+      {texto: "¿Has utilizado información confidencial en tu beneficio?", opciones: [
+        { texto: "Nunca", valor: 0 }, 
+        { texto: "Una vez, sin graves consecuencias", valor: 1 }, 
+        { texto: "Varias veces", valor: 2 }, 
+        { texto: "Sí, es una de mis estrategias habituales", valor: 3 }
+      ]},
+      {texto: "¿Te importan las consecuencias de tus acciones sobre los demás?", opciones: [
+        { texto: "Sí, mucho", valor: 0 }, 
+        { texto: "Depende de quiénes sean", valor: 1 }, 
+        { texto: "Solo si me afectan directamente", valor: 2 }, 
+        { texto: "No, solo me importan mis objetivos", valor: 3 }
+      ]},
+      {texto: "¿Has roto reglas o leyes deliberadamente?", opciones: [
+        { texto: "Nunca", valor: 0 }, 
+        { texto: "Cosas menores sin importancia", valor: 1 }, 
+        { texto: "Sí, en varias ocasiones", valor: 2 }, 
+        { texto: "Sí, frecuentemente y sin remordimientos", valor: 3 }
+      ]},
+      {texto: "¿Te gusta probar los límites de las personas para ver hasta dónde puedes llegar?", opciones: [
+        { texto: "No, respeto los límites", valor: 0 }, 
+        { texto: "A veces, de forma inocente", valor: 1 }, 
+        { texto: "Sí, me divierte", valor: 2 }, 
+        { texto: "Sí, es un juego para mí", valor: 3 }
+      ]},
+      {texto: "¿Cómo describirías tu conciencia moral?", opciones: [
+        { texto: "Muy desarrollada", valor: 0 }, 
+        { texto: "Normal, como la mayoría", valor: 1 }, 
+        { texto: "Algo laxa", valor: 2 }, 
+        { texto: "Casi inexistente", valor: 3 }
+      ]},
+      {texto: "¿Has dañado la reputación de alguien deliberadamente?", opciones: [
+        { texto: "Nunca", valor: 0 }, 
+        { texto: "Una vez, con motivo", valor: 1 }, 
+        { texto: "Varias veces", valor: 2 }, 
+        { texto: "Sí, es una herramienta que uso cuando me conviene", valor: 3 }
+      ]},
+      {texto: "¿Te arrepientes de tus acciones cuando te descubren o cuando tienes consecuencias negativas?", opciones: [
+        { texto: "Siempre me arrepiento si hice daño", valor: 0 }, 
+        { texto: "A veces", valor: 1 }, 
+        { texto: "Solo si las consecuencias son graves para mí", valor: 2 }, 
+        { texto: "No, solo me molesta haber sido descubierto", valor: 3 }
+      ]}
+    ];
+
+    function cargarPreguntas() {
+      const container = document.getElementById("questionsContainer");
+      
+      // Mezclar preguntas pero mantener algunas clave al principio
+      const preguntasMezcladas = [...preguntas];
+      for (let i = preguntasMezcladas.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [preguntasMezcladas[i], preguntasMezcladas[j]] = [preguntasMezcladas[j], preguntasMezcladas[i]];
+      }
+
+      preguntasMezcladas.forEach((pregunta, index) => {
+        const card = document.createElement("div");
+        card.className = "question-card";
+        
+        const questionText = document.createElement("div");
+        questionText.className = "question-text";
+        questionText.textContent = `${index + 1}. ${pregunta.texto}`;
+        card.appendChild(questionText);
+        
+        const optionsContainer = document.createElement("div");
+        optionsContainer.className = "options-container";
+        
+        pregunta.opciones.forEach((opcion, opIndex) => {
+          const optionDiv = document.createElement("div");
+          optionDiv.className = "option";
+          
+          const input = document.createElement("input");
+          input.type = "radio";
+          input.name = `q${index}`;
+          input.id = `q${index}o${opIndex}`;
+          input.value = opcion.valor;
+          if (opIndex === 0) input.required = true;
+          
+          const label = document.createElement("label");
+          label.htmlFor = `q${index}o${opIndex}`;
+          label.textContent = opcion.texto;
+          
+          optionDiv.appendChild(input);
+          optionDiv.appendChild(label);
+          optionsContainer.appendChild(optionDiv);
+        });
+        
+        card.appendChild(optionsContainer);
+        container.appendChild(card);
+      });
+    }
+
+    function verResultado() {
+      // Validar que todas las preguntas estén respondidas
+      const radios = document.querySelectorAll('input[type="radio"]:checked');
+      if (radios.length < preguntas.length) {
+        alert("Por favor responde todas las preguntas para obtener un resultado preciso.");
+        return;
+      }
+
+      let total = 0;
+      radios.forEach(radio => {
+        total += parseInt(radio.value);
+      });
+
+      const maxScore = preguntas.length * 3;
+      const percentage = (total / maxScore) * 100;
+      
+      // Mostrar resultados
+      document.getElementById("progressBar").style.width = `${percentage}%`;
+      document.getElementById("scoreDisplay").textContent = `${total} / ${maxScore}`;
+      
+      let resultado = "";
+      let detalles = "";
+      
+      if (percentage <= 15) {
+        resultado = "😇 INOCENCIA";
+        detalles = "Tu puntuación indica que no muestras tendencias oscuras significativas. Eres una persona empática, con fuertes valores morales y capacidad para ponerte en el lugar de los demás. Mantén esta actitud positiva y compasiva.";
+      } else if (percentage <= 35) {
+        resultado = "🙂 RASGOS NORMALES";
+        detalles = "Como la mayoría de las personas, tienes algunos rasgos oscuros ocasionales pero dentro de lo esperado. Puedes experimentar emociones negativas en situaciones difíciles, pero generalmente las controlas bien y no dominan tu comportamiento.";
+      } else if (percentage <= 60) {
+        resultado = "😐 TENDENCIAS MODERADAS";
+        detalles = "Muestras algunos rasgos oscuros más pronunciados que el promedio. Puedes ser manipulador en ciertas situaciones, carecer de empatía ocasionalmente o disfrutar del control sobre los demás. Es recomendable reflexionar sobre estos aspectos.";
+      } else if (percentage <= 85) {
+        resultado = "😈 TENDENCIAS PELIGROSAS";
+        detalles = "Tu puntuación indica una presencia significativa de rasgos oscuros. Puedes ser calculador, carecer de remordimientos y disfrutar manipulando a otros. Estas tendencias podrían afectar tus relaciones si no las controlas. Considera buscar perspectiva profesional.";
+      } else {
+        resultado = "🔪 PERFIL ALTO RIESGO";
+        detalles = "Tus resultados muestran rasgos extremadamente oscuros. Es probable que carezcas de empatía, tengas tendencias manipuladoras y potencialmente peligrosas. Este perfil puede llevar a comportamientos antisociales. Se recomienda encarecidamente buscar ayuda profesional para explorar estas tendencias.";
+      }
+      
+      document.getElementById("resultText").innerHTML = `<strong>${resultado}</strong><br><br>${detalles}`;
+      document.getElementById("resultContainer").style.display = "block";
+      
+      // Desplazarse suavemente a los resultados
+      document.getElementById("resultContainer").scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Cargar preguntas cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', cargarPreguntas);
+  </script>
+</body>
+</html>
